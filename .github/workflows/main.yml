@@ -1,0 +1,43 @@
+name: CI
+on:
+  [push, pull_request]
+jobs:
+  build-msvc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build tpm2-send-tbs
+        run: cl /W4 /WX src/tpm2-send-tbs.c /link tbs.lib
+      - name: Copy tpm.lib
+        run: dir -path "C:\Program Files (x86)\Windows Kits\10\Lib\*\um\x64" -recurse -include 'tbs.lib' | Copy-Item -Destination .
+      - name: Copy tpm.h
+        run: dir -path "C:\Program Files (x86)\Windows Kits\10\Include\*\shared" -recurse -include 'tbs.h' | Copy-Item -Destination .
+      - name: Archive tpm2-send-tbs.exe
+        uses: actions/upload-artifact@v3
+        with:
+          path: tpm2-send-tbs.exe
+          if-no-files-found: error
+      - name: Archive tbs.lib
+        uses: actions/upload-artifact@v3
+        with:
+          path: tbs.lib
+          if-no-files-found: error
+      - name: Archive tbs.h
+        uses: actions/upload-artifact@v3
+        with:
+          path: tbs.h
+          if-no-files-found: error
+  build-mingw:
+    needs: build-msvc
+    runs-on: ubuntu-latest
+    # download tbs.lib, tbs.h from previous job
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifact
+      - name: Install dependencies
+        run: sudo apt install -y mingw-w64 tpm2-tools
+      - name: Build using make
+        run: make LDFLAGS=-L.
