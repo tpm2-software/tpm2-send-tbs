@@ -44,14 +44,14 @@
 
 typedef struct tdTBS_CONTEXT_PARAMS2__ {
     UINT32 version;
-union {
-    struct {
-    UINT32 requestRaw : 1;
-    UINT32 includeTpm12 : 1;
-    UINT32 includeTpm20 : 1;
+    union {
+        struct {
+            UINT32 requestRaw : 1;
+            UINT32 includeTpm12 : 1;
+            UINT32 includeTpm20 : 1;
+        };
+        UINT32 asUINT32;
     };
-    UINT32 asUINT32;
-};
 } TBS_CONTEXT_PARAMS2__;
 
 #if _MSC_VER
