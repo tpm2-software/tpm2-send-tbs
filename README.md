@@ -40,9 +40,12 @@ printf "80010000000c0000017b0004" | xxd -r -p | build/tpm2-send-tbs.exe --bin | 
 ```
 
 > [!NOTE]
-> `xxd` buffers until its input pipe is closed. With many processes, commands/responses are a back and forth. E.g. tcti-cmd waits for a TPM response before sending the next command. Thus, `xxd` would block indefinitely, here.
+> `xxd` buffers until its input pipe is closed. If a process wants to
+> send multiple TPM commands, the commands/responses are a back and forth. E.g.
+> tcti-cmd waits for a TPM response before sending the next command. Thus, `xxd`
+> would block indefinitely, here.
 >
-> As an alternative, you can use `build/hex` and `build/unhex`.
+> As an alternative, you can use the non-blocking `build/hex` and `build/unhex`.
 >
 > ```bash
 > # bash:
