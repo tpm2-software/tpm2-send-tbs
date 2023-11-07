@@ -1,18 +1,21 @@
 [![Build Status](https://github.com/tpm2-software/tpm2-send-tbs/workflows/CI/badge.svg)](https://github.com/tpm2-software/tpm2-send-tbs/actions)
 
 > [!WARNING]
-> This project is in an alpha state with [known limitations](#limitation-some-tpm-commands-fail). Use with caution!
+> This project is in an alpha state with [known
+> limitations](#limitation-some-tpm-commands-fail). Use with caution!
 
 # tpm2-send-tbs
 
 tpm2-send-tbs is a zero-dependency utility for sending raw bytes to the TPM.
 
-Want to access the TPM 2.0 from within WSL2? Just compile `tpm2-send-tbs.exe` and then call it from your WSL2 shell.
+Want to access the TPM 2.0 from within WSL2? Just compile `tpm2-send-tbs.exe`
+and then call it from your WSL2 shell.
 
 
 # Usage
 
-tpm2-send-tbs takes an input stream (by default `stdin`) and an output stream (by default `stdout`).
+tpm2-send-tbs takes an input stream (by default `stdin`) and an output stream
+(by default `stdout`).
 
 ```cmd
 tpm2-send-tbs [--debug] [--bin] [-in <input file>] [-out <output file>]
@@ -20,7 +23,8 @@ tpm2-send-tbs [--debug] [--bin] [-in <input file>] [-out <output file>]
 
 ## Examples
 
-By default, tpm2-send-tbs reads a hex stream from `stdin` and writes to `stdout`:
+By default, tpm2-send-tbs reads a hex stream from `stdin` and writes to
+`stdout`. Here, a TPM2_GetRandom command is sent as an example:
 
 ```cmd
 REM cmd.exe:
@@ -59,13 +63,17 @@ tpm2_getrandom -T "cmd: build/hex | build/tpm2-send-tbs.exe | build/unhex" --hex
 ```
 
 > [!NOTE]
-> The WSL2 pipe is broken. It turns LF into CR+LF, even if opened in bytewise mode. As a result, `tpm2_getrandom -T "cmd: build/tpm2-send-tbs.exe --bin" --hex 4` will not work.
+> The WSL2 pipe is broken. It turns LF into CR+LF, even if opened in
+> bytewise mode. As a result, `tpm2_getrandom -T "cmd: build/tpm2-send-tbs.exe
+> --bin" --hex 4` will not work.
 >
 > To work around this, use hex format instead of binary for input and output pipes.
 
 # Build
 
-In your WSL2 (or Linux), run make. This will use mingw if installed. Otherwise, msvc will be used (requires [Build Tools for Visual Studio 2022](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)).
+In your WSL2 (or Linux), run make. This will use mingw if installed. Otherwise,
+msvc will be used (requires [Build Tools for Visual Studio
+2022](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)).
 
 ```bash
 make
@@ -91,7 +99,8 @@ cl /W4 src/tpm2-send-tbs.c /link tbs.lib
 
 # Test
 
-Install the [tpm2-tools](https://github.com/tpm2-software/tpm2-tools). In your WSL2, run the smoke tests:
+Install the [tpm2-tools](https://github.com/tpm2-software/tpm2-tools). In your
+WSL2, run the smoke tests:
 
 ```
 make check
@@ -99,7 +108,9 @@ make check
 
 ### Limitation: Some TPM Commands Fail
 
-At the moment, some TPM commands will fail. The root cause of this is unclear. It could be a limitation of the TBS, insufficient priviledges or something entirely different. Hints and patches welcome!
+At the moment, some TPM commands will fail. The root cause of this is unclear.
+It could be a limitation of the TBS, insufficient priviledges or something
+entirely different. Hints and patches welcome!
 
 Example:
 
