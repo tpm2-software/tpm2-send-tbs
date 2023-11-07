@@ -39,18 +39,20 @@ You can use `--bin` to switch to binary format.
 printf "80010000000c0000017b0004" | xxd -r -p | build/tpm2-send-tbs.exe --bin | xxd -p
 ```
 
-### Note:
+> [!NOTE]
+> `xxd` buffers until its input pipe is closed. With many processes, commands/responses are a back and forth. E.g. tcti-cmd waits for a TPM response before sending the next command. Thus, `xxd` would block indefinitely, here.
+>
+> As an alternative, you can use `build/hex` and `build/unhex`.
+>
+> ```bash
+> # bash:
+> tpm2_getrandom -T "cmd: build/hex | build/tpm2-send-tbs.exe | build/unhex" --hex 4
+> ```
 
-`xxd` buffers until its input pipe is closed. With many processes, commands/responses are a back and forth. E.g. tcti-cmd waits for a TPM response before sending the next command.  Thus, `xxd` would block indefinitely, here. You can use `build/hex` and `build/unhex` instead.
-
-```bash
-# bash:
-tpm2_getrandom -T "cmd: build/hex | build/tpm2-send-tbs.exe | build/unhex" --hex 4
-```
-
-### Note:
-
-The WSL2 pipe is broken. It turns LF into CR+LF, even if opened in bytewise mode. As a result, `tpm2_getrandom -T "cmd: build/tpm2-send-tbs.exe --bin" --hex 4` will not work.
+> [!NOTE]
+> The WSL2 pipe is broken. It turns LF into CR+LF, even if opened in bytewise mode. As a result, `tpm2_getrandom -T "cmd: build/tpm2-send-tbs.exe --bin" --hex 4` will not work.
+>
+> To work around this, use hex format instead of binary for input and output pipes.
 
 # Build
 
