@@ -1,8 +1,11 @@
 [![Build Status](https://github.com/tpm2-software/tpm2-send-tbs/workflows/CI/badge.svg)](https://github.com/tpm2-software/tpm2-send-tbs/actions)
 
+> [!WARNING]
+> This project is in an alpha state with [known limitations](#limitation-some-tpm-commands-fail). Use with caution!
+
 # tpm2-send-tbs
 
-tpm2-send-tbs is a no-dependency utility for sending raw bytes to the TPM.
+tpm2-send-tbs is a zero-dependency utility for sending raw bytes to the TPM.
 
 Want to access the TPM 2.0 from within WSL2? Just compile `tpm2-send-tbs.exe` and then call it from your WSL2 shell.
 
@@ -57,7 +60,7 @@ In your WSL2 (or Linux), run make. This will use mingw if installed. Otherwise, 
 make
 ```
 
-## Compile manually
+## Compile Manually
 
 Using mingw:
 ```bash
@@ -83,9 +86,11 @@ Install the [tpm2-tools](https://github.com/tpm2-software/tpm2-tools). In your W
 make check
 ```
 
-### Note:
+### Limitation: Some TPM Commands Fail
 
-At the moment, some TPM commands will fail, e.g.:
+At the moment, some TPM commands will fail. The root cause of this is unclear. It could be a limitation of the TBS, insufficient priviledges or something entirely different. Hints and patches welcome!
+
+Example:
 
 ```bash
 tpm2_nvread 0x01C00002 -T "cmd: build/hex | build/tpm2-send-tbs.exe --debug | build/unhex"
