@@ -52,6 +52,12 @@ printf "80010000000c0000017b0004" | xxd -r -p | build/tpm2-send-tbs.exe --bin | 
 > tpm2_getrandom -T "cmd: build/hex | build/tpm2-send-tbs.exe | build/unhex" --hex 4
 > ```
 
+For usage with [tpm2-tools](https://github.com/tpm2-software/tpm2-tools):
+
+```bash
+tpm2_getrandom -T "cmd: build/hex | build/tpm2-send-tbs.exe | build/unhex" --hex 4
+```
+
 > [!NOTE]
 > The WSL2 pipe is broken. It turns LF into CR+LF, even if opened in bytewise mode. As a result, `tpm2_getrandom -T "cmd: build/tpm2-send-tbs.exe --bin" --hex 4` will not work.
 >
